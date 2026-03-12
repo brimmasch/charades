@@ -38,6 +38,12 @@ flutter build apk --release
 ```
 The APK will be at `build/app/outputs/apk/release/charades.apk`.
 
+## Word lists
+
+The preset category word lists were entirely AI-generated and have not been play tested. Some words may be too obscure, too easy, duplicated, or just not great for charades.
+
+If you find words or categories that need tweaking, please [open a GitHub issue](../../issues) — any feedback is welcome.
+
 ---
 
 *Made for Elsie and Hazel with love.*

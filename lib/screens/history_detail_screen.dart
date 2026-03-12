@@ -1,6 +1,23 @@
 import 'package:flutter/material.dart';
 import '../models/game_history_entry.dart';
 
+class _InfoChip extends StatelessWidget {
+  final String label;
+  const _InfoChip(this.label);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white12,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(label, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+    );
+  }
+}
+
 class HistoryDetailScreen extends StatelessWidget {
   final GameHistoryEntry entry;
 
@@ -24,6 +41,8 @@ class HistoryDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final gotCount = entry.results.where((r) => r.gotIt).length;
     return Scaffold(
       backgroundColor: const Color(0xFF0D1333),
       appBar: AppBar(
@@ -39,34 +58,57 @@ class HistoryDetailScreen extends StatelessWidget {
           // Score header
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 24),
+            padding: EdgeInsets.symmetric(vertical: isLandscape ? 8 : 24),
             color: const Color(0xFF1A237E),
-            child: Column(
-              children: [
-                Text(
-                  _formatDate(entry.dateTime),
-                  style: const TextStyle(color: Colors.white60, fontSize: 13, letterSpacing: 1),
-                ),
-                const SizedBox(height: 8),
-                const Text('FINAL SCORE', style: TextStyle(color: Colors.white60, fontSize: 16, letterSpacing: 3)),
-                const SizedBox(height: 8),
-                Text(
-                  '${entry.score}',
-                  style: const TextStyle(color: Colors.white, fontSize: 72, fontWeight: FontWeight.w900),
-                ),
-                Text(
-                  '${entry.score} of ${entry.results.length} words',
-                  style: const TextStyle(color: Colors.white60, fontSize: 15),
-                ),
-                if (entry.gameDuration != null) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    _formatDuration(entry.gameDuration!),
-                    style: const TextStyle(color: Colors.white38, fontSize: 13),
+            child: isLandscape
+                ? Row(
+                    children: [
+                      Expanded(
+                        child: Center(
+                          child: _InfoChip('$gotCount of ${entry.results.length} words'),
+                        ),
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            _formatDate(entry.dateTime),
+                            style: const TextStyle(color: Colors.white38, fontSize: 11, letterSpacing: 1),
+                          ),
+                          const SizedBox(height: 2),
+                          const Text('FINAL SCORE', style: TextStyle(color: Colors.white60, fontSize: 13, letterSpacing: 3)),
+                          Text('${entry.score}', style: const TextStyle(color: Colors.white, fontSize: 52, fontWeight: FontWeight.w900)),
+                        ],
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: entry.gameDuration != null
+                              ? _InfoChip(_formatDuration(entry.gameDuration!))
+                              : const SizedBox.shrink(),
+                        ),
+                      ),
+                    ],
+                  )
+                : Column(
+                    children: [
+                      Text(
+                        _formatDate(entry.dateTime),
+                        style: const TextStyle(color: Colors.white60, fontSize: 13, letterSpacing: 1),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text('FINAL SCORE', style: TextStyle(color: Colors.white60, fontSize: 16, letterSpacing: 3)),
+                      const SizedBox(height: 8),
+                      Text('${entry.score}', style: const TextStyle(color: Colors.white, fontSize: 72, fontWeight: FontWeight.w900)),
+                      Text(
+                        '$gotCount of ${entry.results.length} words',
+                        style: const TextStyle(color: Colors.white60, fontSize: 15),
+                      ),
+                      if (entry.gameDuration != null) ...[
+                        const SizedBox(height: 4),
+                        Text(_formatDuration(entry.gameDuration!), style: const TextStyle(color: Colors.white38, fontSize: 13)),
+                      ],
+                    ],
                   ),
-                ],
-              ],
-            ),
           ),
 
           // Word list

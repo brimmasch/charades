@@ -193,43 +193,49 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0D1333),
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(224),
-        child: AppBar(
-          backgroundColor: const Color(0xFF1A237E),
-          toolbarHeight: 224,
-          elevation: 0,
-          centerTitle: true,
-          title: GestureDetector(
-            onLongPress: _resetAll,
-            child: const Text(
-              'CHARADES',
-              style: TextStyle(
-                color: Colors.white,
-                letterSpacing: 4,
-                fontWeight: FontWeight.w900,
-                fontSize: 48,
-              ),
-            ),
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.upload_file, color: Colors.white),
-              tooltip: 'Import categories',
-              onPressed: _import,
-            ),
-            IconButton(
-              icon: const Icon(Icons.download, color: Colors.white),
-              tooltip: 'Export categories',
-              onPressed: _exportAll,
-            ),
-          ],
-        ),
-      ),
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: Colors.white))
           : CustomScrollView(
               slivers: [
+                SliverToBoxAdapter(
+                  child: Container(
+                    color: const Color(0xFF1A237E),
+                    padding: const EdgeInsets.fromLTRB(20, 48, 8, 24),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        GestureDetector(
+                          onLongPress: _resetAll,
+                          child: const Text(
+                            'CHARADES',
+                            style: TextStyle(
+                              color: Colors.white,
+                              letterSpacing: 4,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 42,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          right: 0,
+                          child: PopupMenuButton<String>(
+                            icon: const Icon(Icons.more_vert, color: Colors.white),
+                            onSelected: (value) {
+                              if (value == 'add') _openEditor(null);
+                              if (value == 'import') _import();
+                              if (value == 'export') _exportAll();
+                            },
+                            itemBuilder: (_) => const [
+                              PopupMenuItem(value: 'add', child: Text('Add category')),
+                              PopupMenuItem(value: 'import', child: Text('Import categories')),
+                              PopupMenuItem(value: 'export', child: Text('Export categories')),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 SliverPadding(
                   padding: const EdgeInsets.all(12),
                   sliver: SliverGrid(
@@ -298,12 +304,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 ],
               ],
             ),
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: const Color(0xFF1A237E),
-        icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Add Category', style: TextStyle(color: Colors.white)),
-        onPressed: () => _openEditor(null),
-      ),
     );
   }
 }

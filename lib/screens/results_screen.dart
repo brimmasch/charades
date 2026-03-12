@@ -3,6 +3,23 @@ import '../models/category.dart';
 import '../models/word_result.dart';
 import 'game_setup_screen.dart';
 
+class _InfoChip extends StatelessWidget {
+  final String label;
+  const _InfoChip(this.label);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white12,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(label, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+    );
+  }
+}
+
 String _formatDuration(int seconds) {
   if (seconds < 60) return '$seconds sec';
   final m = seconds ~/ 60;
@@ -26,6 +43,7 @@ class ResultsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -36,29 +54,49 @@ class ResultsScreen extends StatelessWidget {
               // Score header
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 24),
+                padding: EdgeInsets.symmetric(vertical: isLandscape ? 8 : 24),
                 color: const Color(0xFF1A237E),
-                child: Column(
-                  children: [
-                    const Text('FINAL SCORE', style: TextStyle(color: Colors.white60, fontSize: 16, letterSpacing: 3)),
-                    const SizedBox(height: 8),
-                    Text(
-                      '$score',
-                      style: const TextStyle(color: Colors.white, fontSize: 72, fontWeight: FontWeight.w900),
-                    ),
-                    Text(
-                      '${results.where((r) => r.gotIt).length} of ${results.length} words',
-                      style: const TextStyle(color: Colors.white60, fontSize: 15),
-                    ),
-                    if (gameDuration != null) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        _formatDuration(gameDuration!),
-                        style: const TextStyle(color: Colors.white38, fontSize: 13),
+                child: isLandscape
+                    ? Row(
+                        children: [
+                          Expanded(
+                            child: Center(
+                              child: _InfoChip(
+                                '${results.where((r) => r.gotIt).length} of ${results.length} words',
+                              ),
+                            ),
+                          ),
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text('FINAL SCORE', style: TextStyle(color: Colors.white60, fontSize: 13, letterSpacing: 3)),
+                              Text('$score', style: const TextStyle(color: Colors.white, fontSize: 52, fontWeight: FontWeight.w900)),
+                            ],
+                          ),
+                          Expanded(
+                            child: Center(
+                              child: gameDuration != null
+                                  ? _InfoChip(_formatDuration(gameDuration!))
+                                  : const SizedBox.shrink(),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Column(
+                        children: [
+                          const Text('FINAL SCORE', style: TextStyle(color: Colors.white60, fontSize: 16, letterSpacing: 3)),
+                          const SizedBox(height: 8),
+                          Text('$score', style: const TextStyle(color: Colors.white, fontSize: 72, fontWeight: FontWeight.w900)),
+                          Text(
+                            '${results.where((r) => r.gotIt).length} of ${results.length} words',
+                            style: const TextStyle(color: Colors.white60, fontSize: 15),
+                          ),
+                          if (gameDuration != null) ...[
+                            const SizedBox(height: 4),
+                            Text(_formatDuration(gameDuration!), style: const TextStyle(color: Colors.white38, fontSize: 13)),
+                          ],
+                        ],
                       ),
-                    ],
-                  ],
-                ),
               ),
 
               // Word list
@@ -98,22 +136,17 @@ class ResultsScreen extends StatelessWidget {
 
               // Score footer + buttons
               Container(
-                padding: const EdgeInsets.all(20),
+                padding: EdgeInsets.all(isLandscape ? 12 : 20),
                 color: const Color(0xFF1A237E),
                 child: Column(
                   children: [
-                    Text(
-                      'Score: $score',
-                      style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 16),
                     Row(
                       children: [
                         Expanded(
                           child: OutlinedButton.icon(
                             style: OutlinedButton.styleFrom(
                               side: const BorderSide(color: Colors.white54),
-                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              padding: EdgeInsets.symmetric(vertical: isLandscape ? 8 : 14),
                             ),
                             icon: const Icon(Icons.grid_view, color: Colors.white70),
                             label: const Text('Categories', style: TextStyle(color: Colors.white70, fontSize: 16)),
@@ -125,7 +158,7 @@ class ResultsScreen extends StatelessWidget {
                           child: ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.greenAccent,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              padding: EdgeInsets.symmetric(vertical: isLandscape ? 8 : 14),
                             ),
                             icon: const Icon(Icons.replay, color: Colors.black87),
                             label: const Text('Play Again', style: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.bold)),
