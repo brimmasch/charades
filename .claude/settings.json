@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(flutter analyze:*)",
+      "Bash(dart pub:*)",
+      "Read(//root/.pub-cache/hosted/pub.dev/sensors_plus-6.1.2/lib/**)",
+      "Bash(flutter build:*)",
+      "Bash(flutter --version)",
+      "Bash(flutter run:*)",
+      "Bash(pkill -f \"flutter run\")",
+      "Bash(pkill -f \"web-server\")",
+      "Bash(lsof -ti:8080)",
+      "Bash(xargs kill:*)",
+      "Read(//app/**)",
+      "Read(//proc/1983/net/**)",
+      "Bash(grep -q \"socket:\\\\[$inode\\\\]\")",
+      "Bash(then echo:*)",
+      "Bash(xargs -r kill -9)",
+      "Bash(pkill -9 -f \"flutter_tools.snapshot run\")",
+      "Bash(pkill -9 -f \"web-port 8080\")",
+      "Bash(kill -9 20920 20956 21017)",
+      "Bash(pgrep -af flutter.*run.*web-server)",
+      "Bash(ls /app/charades/android/app/src/main/res/mipmap-*)",
+      "Bash(convert --version)",
+      "Bash(python3 -c \"from PIL import Image; print\\(''''PIL ok''''\\)\")",
+      "Bash(python3 -c \"import PIL; print\\(PIL.__version__\\)\")",
+      "Bash(pip3 install:*)",
+      "Bash(python3 -m pip install Pillow -q)",
+      "Bash(apt-get install:*)",
+      "Bash(python3 /tmp/make_icon.py)",
+      "Bash(git add:*)",
+      "Bash(git remote:*)",
+      "Bash(git push:*)",
+      "Bash(gh auth:*)"
+    ],
+    "additionalDirectories": [
+      "/tmp"
+    ]
+  }
+}
